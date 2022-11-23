@@ -4,6 +4,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -30,7 +31,7 @@ func GetEmployees(w http.ResponseWriter, r *http.Request) {
 func GetEmployeeById(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var employee Employee
-	Database.First(&employee, mux.Vars(r)["eid"]) // here we can fetch the data by id
+	Database.First(&employee, mux.Vars(r)["eid"]) // here we can fetch the data by databse
 	json.NewEncoder(w).Encode(employee)           // here we can return employee
 
 }
@@ -39,9 +40,15 @@ func UpdateEmployee(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var employee Employee
 	Database.First(&employee, mux.Vars(r)["eid"]) //  here we can feth the data by id
-	json.NewDecoder(r.Body).Decode(&employee)     // here we can update the data which we can fetch
-	Database.Save(&employee)                      // here we can save the data in table which we can update
-	json.NewEncoder(w).Encode(employee)           // here we can return the data
+	fmt.Println(r)
+
+	json.NewDecoder(r.Body).Decode(&employee) // here we can update the data which we can fetch
+	fmt.Println(r)
+	if err := Database.Model(&employee).Where("empname = ?", employee.Empname).Update("empsalary", employee.Empsalary).Error; err != nil {
+		fmt.Printf("update err != nil; %v\n", err)
+	}
+	Database.Save(employee)              // here we can save the data in table which we can update
+	json.NewEncoder(w).Encode(&employee) // here we can return the data
 
 }
 

@@ -13,7 +13,7 @@ import (
 
 var Database *gorm.DB
 
-var urlDSN = "root:Java1234!@#$@tcp(127.0.0.1:3306)/detail" // urldsn is a driver where the database connected
+var urlDSN = "root:Java1234!@#$@tcp(127.0.0.1:3306)/detail" // urldsn is a driver where the database connected  127.0.0.1:3306
 var err error
 
 func DataMigration() {
