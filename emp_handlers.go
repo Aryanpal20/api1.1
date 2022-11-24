@@ -40,11 +40,11 @@ func UpdateEmployee(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var employee Employee
 	Database.First(&employee, mux.Vars(r)["eid"]) //  here we can feth the data by id
-	fmt.Println(r)
-
-	json.NewDecoder(r.Body).Decode(&employee) // here we can update the data which we can fetch
-	fmt.Println(r)
-	if err := Database.Model(&employee).Where("empname = ?", employee.Empname).Update("empsalary", employee.Empsalary).Error; err != nil {
+	json.NewDecoder(r.Body).Decode(&employee)     // here we can update the data which we can fetch
+	if err := Database.Model(&employee).Where("empid = ?", employee.Empid).Update("empsalary", employee.Empsalary).Error; err != nil {
+		fmt.Printf("update err != nil; %v\n", err)
+	}
+	if err := Database.Model(&employee).Where("empid = ?", employee.Empid).Update("empname", employee.Empname).Error; err != nil {
 		fmt.Printf("update err != nil; %v\n", err)
 	}
 	Database.Save(employee)              // here we can save the data in table which we can update
